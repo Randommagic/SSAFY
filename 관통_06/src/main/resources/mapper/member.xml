@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.pj6.member.model.repo.MemberRepo">
+
+	<resultMap type="memberDto" id="member">
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+	</resultMap>
+
+	<resultMap type="memberDto" id="memberAll" extends="member">
+		<result column="user_password" property="userPwd"/>
+		<result column="user_email" property="userEmail"/>
+		<result column="join_date" property="joinDate"/>
+	</resultMap>
+
+	<select id="idCheck" parameterType="String" resultType="int">
+		select count(user_id)
+		from member
+		where user_id = #{userid}
+	</select>
+
+	<insert id="joinMember" parameterType="memberDto">
+		insert into member (user_name, user_id, user_password, user_email, join_date)
+		values (#{userName}, #{userId}, #{userPwd}, #{userEmail}, now())
+	</insert>
+
+	<select id="loginMember" parameterType="map" resultMap="member">
+		select user_id, user_name
+		from member
+		where user_id = #{userid} and user_password = #{userpwd}
+	</select>
+	
+	<select id="listMember" resultMap="memberAll">
+		select user_name, user_id, user_password, user_email, join_date
+		from member
+		order by join_date
+	</select>
+	
+	<select id="getMember" parameterType="string" resultMap="memberAll">
+		select user_id, user_name, user_password, user_email, join_date
+		from member
+		where user_id = #{userId}
+	</select>
+	
+	<update id="updateMember" parameterType="memberDto">
+		update member
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userName != null">user_name = #{userName},</if>
+			<if test="userEmail != null">user_email = #{userEmail},</if>
+		</trim>
+		where user_id = #{userId}
+	</update>
+	
+	<delete id="deleteMember" parameterType="String">
+		delete from member
+		where user_id = #{userId}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.pj6.home.model.repo.HomeRepo">
+
+<!-- 	<resultMap type="homeDto" id="homeAll"> -->
+
+<!-- 		<result column="aptCode" property="apt_code" /> -->
+<!-- 		<result column="apartmentName" property="apt_name" /> -->
+<!-- 		<result column="floor" property="floor" /> -->
+<!-- 		<result column="area" property="area" /> -->
+<!-- 		<result column="user_password" property="dong_name" /> -->
+<!-- 		<result column="dealamount" property="deal_amount" /> -->
+<!-- 		<result column="user_password" property="deal_year" /> -->
+<!-- 		<result column="user_password" property="deal_month" /> -->
+<!-- 		<result column="user_password" property="deal_day" /> -->
+<!-- 		<result column="user_password" property="lng" /> -->
+<!-- 		<result column="user_password" property="lat" /> -->
+
+<!-- 	</resultMap> -->
+
+
+
+
+	<select id="listDeal" parameterType="map" resultType="HomeDto">
+		SELECT d.no deal_no, i.aptcode apt_code, apartmentName apt_name, floor, area, dong dong_name, dealamount deal_amount
+		FROM
+		housedeal d, houseinfo i
+		WHERE d.aptcode = i.aptcode
+		<if test="dong != ''">
+			AND i.dongCode = #{dong}
+			<if test="apartmentname != ''">
+				AND apartmentName like concat('%', #{aptname},'%')
+			</if>
+		</if>
+	</select>
+
+	<select id="findByDealCode" resultType="HomeDto">
+		SELECT i.aptcode apt_code, apartmentName apt_name, floor, area, dong dong_name, dealamount deal_amount , lng , lat
+		FROM
+		housedeal d, houseinfo i
+		WHERE d.aptcode = i.aptcode
+		AND d.no = #{dealcode}
+	</select>
+
+
+
+</mapper>
